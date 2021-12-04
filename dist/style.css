@@ -1,2 +1,55 @@
-div {
-  font-size: 44px; }
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+* {
+  box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0; }
+
+.section {
+  padding: 35px 60px 0 60px; }
+
+.section-title {
+  margin-bottom: 35px;
+  font-size: 36px;
+  font-weight: 700;
+  text-align: center; }
+
+.promo__img {
+  display: block;
+  width: 60%;
+  margin: 0 auto; }
+
+.promo__text {
+  margin: 30px auto;
+  max-width: 70%;
+  font-size: 18px;
+  font-weight: 700; }
+
+.benefits {
+  padding-bottom: 40px; }
+  .benefits__title {
+    text-align: center; }
+  .benefits__wrapper {
+    display: flex;
+    justify-content: center; }
+  .benefits__block {
+    flex: 1;
+    max-width: 300px;
+    margin: 0 30px;
+    padding: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 10px; }
+    .benefits__block-title {
+      font-weight: 700;
+      color: #444;
+      text-align: center; }
+    .benefits__block-text {
+      margin: 20px 0 0 0;
+      color: rgba(68, 68, 68, 0.8);
+      text-align: center;
+      font-size: 15px; }
