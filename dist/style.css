@@ -1,4 +1,38 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+.customizator__panel {
+  position: fixed;
+  top: 5px;
+  right: 5px;
+  display: flex;
+  min-width: 100px;
+  padding: 5px 20px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  background-color: #fff; }
+  .customizator__panel .scale-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 3px;
+    margin: 0 3px;
+    font-size: 18px;
+    font-weight: 700;
+    background-color: #efefef;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer; }
+    .customizator__panel .scale-btn:hover {
+      opacity: .8; }
+  .customizator__panel .scale-btn.active {
+    background-color: rgba(0, 0, 0, 0.2); }
+  .customizator__panel .reset-scale-btn {
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center; }
+
 * {
   box-sizing: border-box; }
 
