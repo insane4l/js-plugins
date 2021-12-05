@@ -1,34 +1,46 @@
 // Font size changer
-
-export default class FontSizeChanger {
+export default class FontSizeChanger { // todo: implement withDropDown functionality
     constructor({
         wrapperSelector = '.scale__settings-panel', // Selector of the parent where the buttons will be placed 
-                                                   // If leave default value => fixed panel (appended to body) will be created;
-        scaleAreaSelectors = ['body'], // 
-        withResetBtn = true,
-        resetBtnText = '\u21BB',
-        resetBtnImg = null, // Reset (to default scale) button image './assets/reset-btn.png'
-        resetBtnCN = ['scale-btn', 'reset-scale-btn'], // Reset (to default scale) button class names
+                                                   // If leave default value => panel (appended to body) will be created;
+        scaleAreaSelectors = ['body'],
         activeClass = 'active',
         btns = [
-            {scale: 1, cn: ['scale-btn']}, // todo: remove 1x btn from default (by default there is reset-btn with 1x scale);
+            {scale: 1, cn: ['scale-btn']}, // todo: mb remove 1x btn from default (by default there is reset-btn with 1x scale);
             {scale: 1.3, cn: ['scale-btn']},
             {scale: 1.5, cn: ['scale-btn']}
-        ]
+        ],
+        withDefaultStyle = true,
+        withResetBtn = true, // Btn reset to initial 1x scale [true / false]
+        resetBtnText = '\u21BB', // Will be shown only if there is no resetBtnImg (resetBtnImg != string) By default there is cross-platform, cross-browser unicode symbol
+        resetBtnImg = null, // Reset button image [string / ....] To show must be a string. Example: './assets/reset-btn.png'
+        resetBtnCN = ['scale-btn', 'reset-scale-btn'] // Reset button class names
+
     } = {}) {
         this.wrapperSelector = wrapperSelector;
-
         this.scaleAreaSelectors = scaleAreaSelectors;
+        this.activeClass = activeClass;
+        this.btns = btns;
+
+        this.withDefaultStyle = withDefaultStyle;
+
         this.withResetBtn = withResetBtn;
         this.resetBtnText = resetBtnText;
         this.resetBtnImg = resetBtnImg;
         this.resetBtnCN = resetBtnCN;
-        this.activeClass = activeClass;
-        this.btns = btns;
-        // todo: this.defaultStyle true/false // if true injectStyle() {<head> appendChild <style>.innerHTML}
     }
 
     createScaleBtns() {
+
+        function createBtn(value, scale, classNames) {
+            const btn = document.createElement('input');
+            btn.setAttribute('type', 'button');
+            btn.setAttribute('value', value);
+            btn.setAttribute('data-scale-value', scale);
+            btn.classList.add(...classNames);
+
+            return btn;
+        }
         
         try {
             this.scaleBtns = [];
@@ -36,11 +48,8 @@ export default class FontSizeChanger {
             const btns = this.btns;
 
             for (let i = 0; i < btns.length; i++) {
-                const btn = document.createElement('input');
-                btn.setAttribute('type', 'button');
-                btn.setAttribute('value', `${btns[i].scale}x`);
-                btn.setAttribute('data-scale-value', btns[i].scale);
-                btn.classList.add(...btns[i].cn);
+                const btn = createBtn(`${btns[i].scale}x`, btns[i].scale, btns[i].cn);
+             
                 if (btns[i].scale === 1) btn.classList.add(this.activeClass);
 
                 btn.addEventListener('click', (e) => this.onScaleChange(e) );
@@ -48,14 +57,13 @@ export default class FontSizeChanger {
                 this.scaleBtns.push(btn);
             }
 
-            if ( this.withResetBtn ) {
 
-                const resetBtn = document.createElement('button'); // todo: must be input type button (because of text node scale)
-                resetBtn.setAttribute('data-scale-value', '1');
-                resetBtn.classList.add(...this.resetBtnCN);
+            if ( this.withResetBtn && typeof this.withResetBtn === 'boolean' ) {
 
-                this.resetBtnImg ? resetBtn.style.backgroundImage = `url(${this.resetBtnImg})` // todo: test
-                                 : resetBtn.textContent = this.resetBtnText;  // todo: input value
+                const resetBtn = createBtn('', '1', this.resetBtnCN);
+
+                this.resetBtnImg ? resetBtn.style.backgroundImage = `url(${this.resetBtnImg})`
+                                 : resetBtn.setAttribute('value', `${this.resetBtnText}`);
                 
                 resetBtn.addEventListener('click', (e) => this.onScaleChange(e) );
 
@@ -84,7 +92,7 @@ export default class FontSizeChanger {
 
             const scale = +e.target.getAttribute('data-scale-value');
 
-            const scaleArea = document.querySelectorAll(this.scaleAreaSelectors); // todo: test.. fix bugs
+            const scaleArea = document.querySelectorAll(this.scaleAreaSelectors);
             scaleArea.forEach( el => recursy(el) );
             
 
@@ -109,34 +117,79 @@ export default class FontSizeChanger {
         }
     }
 
+    injectStyle() {
+        const style = document.createElement('style');
+        const wrapperStyles = `
+            .scale__settings-panel {
+                position: fixed;
+                top: 5px;
+                right: 5px;
+                display: flex;
+                min-width: 100px;
+                padding: 5px 20px;
+                border: 2px solid rgba(0, 0, 0, .2);
+                border-radius: 3px;
+                background-color: #fff;
+            }
+        `;
+
+        style.innerHTML = `
+            .scale-btn {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-width: 40px;
+                height: 40px;
+                padding: 3px;
+                margin: 0 3px;
+                font-family: inherit;
+                font-size: 18px;
+                font-weight: 700;
+                background-color: #efefef;
+                border: 1px solid rgba(0, 0, 0, .2);
+                border-radius: 3px;
+                outline: none;
+                cursor: pointer;
+            }
+
+            .scale-btn:hover {
+                opacity: .8;
+                box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+            }
+            
+            .scale-btn.active {
+                background-color: rgba(0, 0, 0, .3);
+                color: #fff;
+            }
+            
+            .reset-scale-btn {
+                background-size: 60%;
+                background-repeat: no-repeat;
+                background-position: center;
+            }
+            ${this.wrapperSelector === '.scale__settings-panel' ? wrapperStyles : ''}
+        `;
+
+        document.querySelector('head').appendChild(style);
+    }
+
     render() {
         try {
 
-            this.createScaleBtns();
+            if ( this.withDefaultStyle && typeof this.withDefaultStyle === 'boolean' ) this.injectStyle();
+
 
             if ( this.wrapperSelector === '.scale__settings-panel' ) {
 
                 this.wrapper = document.createElement('div');
-                // todo: func injectStyle => if ( this.wrapperSelector === '.scale__settings-panel' ) <head> appendChild <style>.innerHTML .scale__settings-panel.... 
-                //BECAUSE OF USER CANT ADD CUSTOM STYLES when cssText clear all props
-                this.wrapper.style.cssText = `
-                    position: fixed;
-                    top: 5px;
-                    right: 5px;
-                    display: flex;
-                    min-width: 100px;
-                    padding: 5px 20px;
-                    border: 2px solid rgba(0, 0, 0, .2);
-                    border-radius: 3px;
-                    background-color: #fff;
-                `;
-
+                this.wrapper.classList.add('scale__settings-panel');
                 document.querySelector('body').appendChild(this.wrapper);
 
             } else {
                 this.wrapper = document.querySelector(this.wrapperSelector);
             }
 
+            this.createScaleBtns();
             this.scaleBtns.forEach( el => this.wrapper.appendChild(el) );
 
         } catch(e){}

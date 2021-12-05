@@ -15,5 +15,5 @@ window.addEventListener('DOMContentLoaded', () => {
     // });
     // customizator.render();
 
-    new FontSizeChanger().render();
+    new FontSizeChanger({resetBtnText: 'test', scaleAreaSelectors: ['.benefits__block', 'h1']}).render(); //resetBtnImg: './assets/reset-btn.png'
 })
