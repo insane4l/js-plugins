@@ -108,11 +108,25 @@ export default class Customizator {
         }
     }
 
+    createColorPicker() {
+        const colorPicker = document.createElement('input');
+        colorPicker.classList.add('color-picker');
+        colorPicker.setAttribute('type', 'color');
+        colorPicker.setAttribute('value', '#ffffff');
+        
+        colorPicker.addEventListener('input', (e) => {
+            const body = document.querySelector('body');
+            body.style.backgroundColor = e.target.value;
+        });
+
+        this.colorPicker = colorPicker;
+    }
+
     createPanel() {
         this.createScaleBtns();
+        this.createColorPicker();
 
-
-        const allBtns = [...this.scaleBtns];
+        const allBtns = [...this.scaleBtns, this.colorPicker];
 
         allBtns.forEach(btn => {
             this.panel.appendChild(btn);
