@@ -3459,81 +3459,6 @@ module.exports = function (name) {
 
 /***/ }),
 
-/***/ "./node_modules/core-js/modules/es.array.concat.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/core-js/modules/es.array.concat.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var $ = __webpack_require__(/*! ../internals/export */ "./node_modules/core-js/internals/export.js");
-var global = __webpack_require__(/*! ../internals/global */ "./node_modules/core-js/internals/global.js");
-var fails = __webpack_require__(/*! ../internals/fails */ "./node_modules/core-js/internals/fails.js");
-var isArray = __webpack_require__(/*! ../internals/is-array */ "./node_modules/core-js/internals/is-array.js");
-var isObject = __webpack_require__(/*! ../internals/is-object */ "./node_modules/core-js/internals/is-object.js");
-var toObject = __webpack_require__(/*! ../internals/to-object */ "./node_modules/core-js/internals/to-object.js");
-var lengthOfArrayLike = __webpack_require__(/*! ../internals/length-of-array-like */ "./node_modules/core-js/internals/length-of-array-like.js");
-var createProperty = __webpack_require__(/*! ../internals/create-property */ "./node_modules/core-js/internals/create-property.js");
-var arraySpeciesCreate = __webpack_require__(/*! ../internals/array-species-create */ "./node_modules/core-js/internals/array-species-create.js");
-var arrayMethodHasSpeciesSupport = __webpack_require__(/*! ../internals/array-method-has-species-support */ "./node_modules/core-js/internals/array-method-has-species-support.js");
-var wellKnownSymbol = __webpack_require__(/*! ../internals/well-known-symbol */ "./node_modules/core-js/internals/well-known-symbol.js");
-var V8_VERSION = __webpack_require__(/*! ../internals/engine-v8-version */ "./node_modules/core-js/internals/engine-v8-version.js");
-
-var IS_CONCAT_SPREADABLE = wellKnownSymbol('isConcatSpreadable');
-var MAX_SAFE_INTEGER = 0x1FFFFFFFFFFFFF;
-var MAXIMUM_ALLOWED_INDEX_EXCEEDED = 'Maximum allowed index exceeded';
-var TypeError = global.TypeError;
-
-// We can't use this feature detection in V8 since it causes
-// deoptimization and serious performance degradation
-// https://github.com/zloirock/core-js/issues/679
-var IS_CONCAT_SPREADABLE_SUPPORT = V8_VERSION >= 51 || !fails(function () {
-  var array = [];
-  array[IS_CONCAT_SPREADABLE] = false;
-  return array.concat()[0] !== array;
-});
-
-var SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('concat');
-
-var isConcatSpreadable = function (O) {
-  if (!isObject(O)) return false;
-  var spreadable = O[IS_CONCAT_SPREADABLE];
-  return spreadable !== undefined ? !!spreadable : isArray(O);
-};
-
-var FORCED = !IS_CONCAT_SPREADABLE_SUPPORT || !SPECIES_SUPPORT;
-
-// `Array.prototype.concat` method
-// https://tc39.es/ecma262/#sec-array.prototype.concat
-// with adding support of @@isConcatSpreadable and @@species
-$({ target: 'Array', proto: true, forced: FORCED }, {
-  // eslint-disable-next-line no-unused-vars -- required for `.length`
-  concat: function concat(arg) {
-    var O = toObject(this);
-    var A = arraySpeciesCreate(O, 0);
-    var n = 0;
-    var i, k, length, len, E;
-    for (i = -1, length = arguments.length; i < length; i++) {
-      E = i === -1 ? O : arguments[i];
-      if (isConcatSpreadable(E)) {
-        len = lengthOfArrayLike(E);
-        if (n + len > MAX_SAFE_INTEGER) throw TypeError(MAXIMUM_ALLOWED_INDEX_EXCEEDED);
-        for (k = 0; k < len; k++, n++) if (k in E) createProperty(A, n, E[k]);
-      } else {
-        if (n >= MAX_SAFE_INTEGER) throw TypeError(MAXIMUM_ALLOWED_INDEX_EXCEEDED);
-        createProperty(A, n++, E);
-      }
-    }
-    A.length = n;
-    return A;
-  }
-});
-
-
-/***/ }),
-
 /***/ "./node_modules/core-js/modules/es.array.for-each.js":
 /*!***********************************************************!*\
   !*** ./node_modules/core-js/modules/es.array.for-each.js ***!
@@ -4558,103 +4483,44 @@ module.exports = g;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _modules_customizator_customizator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/customizator/customizator */ "./src/js/modules/customizator/customizator.js");
+/* harmony import */ var _modules_colorPicker_colorPicker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/colorPicker/colorPicker */ "./src/js/modules/colorPicker/colorPicker.js");
 /* harmony import */ var _modules_fontSizeChanger_fzChanger__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/fontSizeChanger/fzChanger */ "./src/js/modules/fontSizeChanger/fzChanger.js");
 
 
 window.addEventListener('DOMContentLoaded', function () {
-  // const customizator = new Customizator({
-  //     // panelClass: 'customizator__panel', // default class
-  //     // scaleOptions: {
-  //         // btns: [
-  //         //     {scale: 1, cn: ['scale-btn']},
-  //         //     {scale: 1.2, cn: ['scale-btn']},
-  //         //     {scale: 1.4, cn: ['scale-btn']}
-  //         // ]
-  //     // }
-  // });
-  // customizator.render();
   new _modules_fontSizeChanger_fzChanger__WEBPACK_IMPORTED_MODULE_1__["default"]({
     resetBtnText: 'test',
     scaleAreaSelectors: ['.benefits__block', 'h1']
-  }).render(); //resetBtnImg: './assets/reset-btn.png'
+  }).render();
+  new _modules_colorPicker_colorPicker__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    colorAreaSelectors: ['.benefits__block']
+  }).render();
 });
 
 /***/ }),
 
-/***/ "./src/js/modules/customizator/customizator.js":
-/*!*****************************************************!*\
-  !*** ./src/js/modules/customizator/customizator.js ***!
-  \*****************************************************/
+/***/ "./src/js/modules/colorPicker/colorPicker.js":
+/*!***************************************************!*\
+  !*** ./src/js/modules/colorPicker/colorPicker.js ***!
+  \***************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Customizator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ColorPicker; });
 /* harmony import */ var core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.for-each.js */ "./node_modules/core-js/modules/es.array.for-each.js");
 /* harmony import */ var core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.object.to-string.js */ "./node_modules/core-js/modules/es.object.to-string.js");
 /* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var core_js_modules_web_dom_collections_for_each_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/web.dom-collections.for-each.js */ "./node_modules/core-js/modules/web.dom-collections.for-each.js");
 /* harmony import */ var core_js_modules_web_dom_collections_for_each_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_for_each_js__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var core_js_modules_es_regexp_exec_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es.regexp.exec.js */ "./node_modules/core-js/modules/es.regexp.exec.js");
-/* harmony import */ var core_js_modules_es_regexp_exec_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_regexp_exec_js__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var core_js_modules_es_string_replace_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! core-js/modules/es.string.replace.js */ "./node_modules/core-js/modules/es.string.replace.js");
-/* harmony import */ var core_js_modules_es_string_replace_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_replace_js__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ "./node_modules/core-js/modules/es.array.concat.js");
-/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! core-js/modules/es.object.define-property.js */ "./node_modules/core-js/modules/es.object.define-property.js");
-/* harmony import */ var core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var core_js_modules_es_array_is_array_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! core-js/modules/es.array.is-array.js */ "./node_modules/core-js/modules/es.array.is-array.js");
-/* harmony import */ var core_js_modules_es_array_is_array_js__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_is_array_js__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var core_js_modules_es_symbol_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! core-js/modules/es.symbol.js */ "./node_modules/core-js/modules/es.symbol.js");
-/* harmony import */ var core_js_modules_es_symbol_js__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_symbol_js__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var core_js_modules_es_symbol_description_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! core-js/modules/es.symbol.description.js */ "./node_modules/core-js/modules/es.symbol.description.js");
-/* harmony import */ var core_js_modules_es_symbol_description_js__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_symbol_description_js__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! core-js/modules/es.symbol.iterator.js */ "./node_modules/core-js/modules/es.symbol.iterator.js");
-/* harmony import */ var core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! core-js/modules/es.array.iterator.js */ "./node_modules/core-js/modules/es.array.iterator.js");
-/* harmony import */ var core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var core_js_modules_es_string_iterator_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! core-js/modules/es.string.iterator.js */ "./node_modules/core-js/modules/es.string.iterator.js");
-/* harmony import */ var core_js_modules_es_string_iterator_js__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_iterator_js__WEBPACK_IMPORTED_MODULE_12__);
-/* harmony import */ var core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! core-js/modules/web.dom-collections.iterator.js */ "./node_modules/core-js/modules/web.dom-collections.iterator.js");
-/* harmony import */ var core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_13__);
-/* harmony import */ var core_js_modules_es_array_from_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! core-js/modules/es.array.from.js */ "./node_modules/core-js/modules/es.array.from.js");
-/* harmony import */ var core_js_modules_es_array_from_js__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_from_js__WEBPACK_IMPORTED_MODULE_14__);
-/* harmony import */ var core_js_modules_es_array_slice_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! core-js/modules/es.array.slice.js */ "./node_modules/core-js/modules/es.array.slice.js");
-/* harmony import */ var core_js_modules_es_array_slice_js__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_slice_js__WEBPACK_IMPORTED_MODULE_15__);
-/* harmony import */ var core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! core-js/modules/es.function.name.js */ "./node_modules/core-js/modules/es.function.name.js");
-/* harmony import */ var core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_16__);
+/* harmony import */ var core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es.object.define-property.js */ "./node_modules/core-js/modules/es.object.define-property.js");
+/* harmony import */ var core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_3__);
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -4662,174 +4528,47 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var Customizator = /*#__PURE__*/function () {
-  function Customizator() {
+var ColorPicker = /*#__PURE__*/function () {
+  function ColorPicker() {
     var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
         _ref$wrapperSelector = _ref.wrapperSelector,
         wrapperSelector = _ref$wrapperSelector === void 0 ? 'body' : _ref$wrapperSelector,
-        _ref$panelClass = _ref.panelClass,
-        panelClass = _ref$panelClass === void 0 ? 'customizator__panel' : _ref$panelClass,
-        _ref$scaleOptions = _ref.scaleOptions,
-        scaleOptions = _ref$scaleOptions === void 0 ? {
-      // todo: separate scale module, scaleOptions must be added in constructor with default values (user can change one of them, dont need to fill all object props)
-      scaleAreaSelectors: ['body'],
-      // block selectors, which text nodes will be scaled
-      activeClass: 'active',
-      resetBtn: {
-        imgUrl: './assets/reset-btn.png',
-        cn: ['scale-btn', 'reset-scale-btn']
-      },
-      // can be null/false
-      btns: [{
-        scale: 1,
-        cn: ['scale-btn']
-      }, // todo: remove 1x btn from default (by default there is reset-btn with 1x scale);
-      {
-        scale: 1.3,
-        cn: ['scale-btn']
-      }, {
-        scale: 1.5,
-        cn: ['scale-btn']
-      }]
-    } : _ref$scaleOptions;
+        _ref$colorAreaSelecto = _ref.colorAreaSelectors,
+        colorAreaSelectors = _ref$colorAreaSelecto === void 0 ? ['body'] : _ref$colorAreaSelecto;
 
-    _classCallCheck(this, Customizator);
+    _classCallCheck(this, ColorPicker);
 
-    this.panel = document.createElement('div');
-    this.panelClass = panelClass;
     this.wrapper = document.querySelector(wrapperSelector);
-    this.scaleOptions = scaleOptions;
+    this.colorAreas = document.querySelectorAll(colorAreaSelectors);
   }
 
-  _createClass(Customizator, [{
-    key: "createScaleBtns",
-    value: function createScaleBtns() {
-      var _this = this;
-
-      try {
-        this.scaleBtns = [];
-        var btns = this.scaleOptions.btns;
-
-        for (var i = 0; i < btns.length; i++) {
-          var _btn$classList;
-
-          var btn = document.createElement('input');
-          btn.setAttribute('type', 'button');
-          btn.setAttribute('value', "".concat(btns[i].scale, "x"));
-          btn.setAttribute('data-scale-value', btns[i].scale);
-
-          (_btn$classList = btn.classList).add.apply(_btn$classList, _toConsumableArray(btns[i].cn));
-
-          if (btns[i].scale === 1) btn.classList.add(this.scaleOptions.activeClass);
-          btn.addEventListener('click', function (e) {
-            return _this.onScaleChange(e);
-          });
-          this.scaleBtns.push(btn);
-        }
-
-        if (this.scaleOptions.resetBtn) {
-          var _resetBtn$classList;
-
-          var _this$scaleOptions$re = this.scaleOptions.resetBtn,
-              imgUrl = _this$scaleOptions$re.imgUrl,
-              cn = _this$scaleOptions$re.cn;
-          var resetBtn = document.createElement('button');
-          resetBtn.setAttribute('data-scale-value', '1');
-
-          (_resetBtn$classList = resetBtn.classList).add.apply(_resetBtn$classList, _toConsumableArray(cn));
-
-          if (imgUrl) {
-            resetBtn.style.backgroundImage = "url(".concat(imgUrl, ")");
-          }
-
-          resetBtn.addEventListener('click', function (e) {
-            return _this.onScaleChange(e);
-          });
-          this.scaleResetBtn = resetBtn;
-          this.scaleBtns.push(resetBtn);
-        }
-      } catch (e) {}
-    }
-  }, {
-    key: "onScaleChange",
-    value: function onScaleChange(e) {
-      var _this2 = this;
-
-      if (e.target && e.target.getAttribute('data-scale-value')) {
-        var recursy = function recursy(elem) {
-          elem.childNodes.forEach(function (node) {
-            if (node.nodeName === '#text' && node.nodeValue.replace(/\s+/g, '').length > 0) {
-              if (!node.parentNode.getAttribute('data-fz')) {
-                var fz = +window.getComputedStyle(node.parentNode, null).fontSize.replace(/[a-z]/g, '');
-                node.parentNode.setAttribute('data-fz', fz);
-                node.parentNode.style.fontSize = "".concat(fz * scale, "px");
-              } else {
-                node.parentNode.style.fontSize = "".concat(+node.parentNode.getAttribute('data-fz') * scale, "px");
-              }
-            } else {
-              recursy(node);
-            }
-          });
-        };
-
-        this.scaleBtns.forEach(function (btn) {
-          return btn.classList.remove(_this2.scaleOptions.activeClass);
-        });
-
-        if (e.target === this.scaleResetBtn) {
-          this.scaleBtns.forEach(function (btn) {
-            if (btn.getAttribute('data-scale-value') === '1' && btn != _this2.scaleResetBtn) {
-              btn.classList.add(_this2.scaleOptions.activeClass);
-            }
-          });
-        } else {
-          e.target.classList.add(this.scaleOptions.activeClass);
-        }
-
-        var scale = +e.target.getAttribute('data-scale-value');
-        var scaleArea = document.querySelectorAll(this.scaleOptions.scaleAreaSelectors);
-        scaleArea.forEach(function (el) {
-          return recursy(el);
-        });
-      }
-    }
-  }, {
+  _createClass(ColorPicker, [{
     key: "createColorPicker",
     value: function createColorPicker() {
+      var _this = this;
+
       var colorPicker = document.createElement('input');
       colorPicker.classList.add('color-picker');
       colorPicker.setAttribute('type', 'color');
       colorPicker.setAttribute('value', '#ffffff');
       colorPicker.addEventListener('input', function (e) {
-        var body = document.querySelector('body');
-        body.style.backgroundColor = e.target.value;
+        _this.colorAreas.forEach(function (area) {
+          area.style.backgroundColor = e.target.value;
+        });
       });
-      this.colorPicker = colorPicker;
-    }
-  }, {
-    key: "createPanel",
-    value: function createPanel() {
-      var _this3 = this;
-
-      this.createScaleBtns();
-      this.createColorPicker();
-      var allBtns = [].concat(_toConsumableArray(this.scaleBtns), [this.colorPicker]);
-      allBtns.forEach(function (btn) {
-        _this3.panel.appendChild(btn);
-      });
-      this.panel.classList.add(this.panelClass);
-      this.wrapper.appendChild(this.panel);
+      console.log('aaaa');
+      this.wrapper.appendChild(colorPicker);
     }
   }, {
     key: "render",
     value: function render() {
       try {
-        this.createPanel();
+        this.createColorPicker();
       } catch (e) {}
     }
   }]);
 
-  return Customizator;
+  return ColorPicker;
 }();
 
 
