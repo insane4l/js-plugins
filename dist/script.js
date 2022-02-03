@@ -4493,7 +4493,9 @@ window.addEventListener('DOMContentLoaded', function () {
     scaleAreaSelectors: ['.benefits__block', 'h1']
   }).render();
   new _modules_colorPicker_colorPicker__WEBPACK_IMPORTED_MODULE_0__["default"]({
-    colorAreaSelectors: ['.benefits__block']
+    initialColor: '#e93f33',
+    colorAreaSelectors: ['.benefits__block'],
+    wrapperSelector: '.scale__settings-panel'
   }).render();
 });
 
@@ -4534,12 +4536,18 @@ var ColorPicker = /*#__PURE__*/function () {
         _ref$wrapperSelector = _ref.wrapperSelector,
         wrapperSelector = _ref$wrapperSelector === void 0 ? 'body' : _ref$wrapperSelector,
         _ref$colorAreaSelecto = _ref.colorAreaSelectors,
-        colorAreaSelectors = _ref$colorAreaSelecto === void 0 ? ['body'] : _ref$colorAreaSelecto;
+        colorAreaSelectors = _ref$colorAreaSelecto === void 0 ? ['body'] : _ref$colorAreaSelecto,
+        _ref$withDefaultStyle = _ref.withDefaultStyle,
+        withDefaultStyle = _ref$withDefaultStyle === void 0 ? true : _ref$withDefaultStyle,
+        _ref$initialColor = _ref.initialColor,
+        initialColor = _ref$initialColor === void 0 ? '#ffffff' : _ref$initialColor;
 
     _classCallCheck(this, ColorPicker);
 
     this.wrapper = document.querySelector(wrapperSelector);
     this.colorAreas = document.querySelectorAll(colorAreaSelectors);
+    this.withDefaultStyle = withDefaultStyle;
+    this.initialColor = initialColor;
   }
 
   _createClass(ColorPicker, [{
@@ -4556,13 +4564,23 @@ var ColorPicker = /*#__PURE__*/function () {
           area.style.backgroundColor = e.target.value;
         });
       });
-      console.log('aaaa');
+      console.dir(colorPicker);
       this.wrapper.appendChild(colorPicker);
+    }
+  }, {
+    key: "injectStyle",
+    value: function injectStyle() {
+      {
+        var style = document.createElement('style');
+        style.innerHTML = "\n                .color-picker {\n                    display: flex;\n                    justify-content: center;\n                    align-items: center;\n                    width: 40px;\n                    height: 40px;\n                    font-family: inherit;\n                    font-size: 18px;\n                    font-weight: 700;\n                    border: 1px solid rgba(0, 0, 0, .2);\n                    border-radius: 3px;\n                    outline: none;\n                    cursor: pointer;\n                }\n    \n                .color-picker:hover {\n                    opacity: .8;\n                    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);\n                }\n            ";
+        document.querySelector('head').appendChild(style);
+      }
     }
   }, {
     key: "render",
     value: function render() {
       try {
+        if (this.withDefaultStyle && typeof this.withDefaultStyle === 'boolean') this.injectStyle();
         this.createColorPicker();
       } catch (e) {}
     }
@@ -4667,8 +4685,7 @@ var FontSizeChanger = /*#__PURE__*/function () {
         btns = _ref$btns === void 0 ? [{
       scale: 1,
       cn: ['scale-btn']
-    }, // todo: mb remove 1x btn from default (by default there is reset-btn with 1x scale);
-    {
+    }, {
       scale: 1.3,
       cn: ['scale-btn']
     }, {
@@ -4778,8 +4795,8 @@ var FontSizeChanger = /*#__PURE__*/function () {
         }
 
         var scale = +e.target.getAttribute('data-scale-value');
-        var scaleArea = document.querySelectorAll(this.scaleAreaSelectors);
-        scaleArea.forEach(function (el) {
+        var scaleAreas = document.querySelectorAll(this.scaleAreaSelectors);
+        scaleAreas.forEach(function (el) {
           return recursy(el);
         });
       }

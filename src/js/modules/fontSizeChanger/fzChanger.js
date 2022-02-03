@@ -6,7 +6,7 @@ export default class FontSizeChanger { // todo: implement withDropDown functiona
         scaleAreaSelectors = ['body'],
         activeClass = 'active',
         btns = [
-            {scale: 1, cn: ['scale-btn']}, // todo: mb remove 1x btn from default (by default there is reset-btn with 1x scale);
+            {scale: 1, cn: ['scale-btn']},
             {scale: 1.3, cn: ['scale-btn']},
             {scale: 1.5, cn: ['scale-btn']}
         ],
@@ -92,8 +92,8 @@ export default class FontSizeChanger { // todo: implement withDropDown functiona
 
             const scale = +e.target.getAttribute('data-scale-value');
 
-            const scaleArea = document.querySelectorAll(this.scaleAreaSelectors);
-            scaleArea.forEach( el => recursy(el) );
+            const scaleAreas = document.querySelectorAll(this.scaleAreaSelectors);
+            scaleAreas.forEach( el => recursy(el) );
             
 
             function recursy(elem) {
